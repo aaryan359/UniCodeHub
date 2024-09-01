@@ -1,7 +1,8 @@
 
 
 const emailOtpTemplate = (otp) => {
-    
+  
+  
     return `
       <!DOCTYPE html>
       <html lang="en">
@@ -71,6 +72,7 @@ const emailOtpTemplate = (otp) => {
       </html>
     `;
   };
+
 
   export default emailOtpTemplate
   
