@@ -3,6 +3,7 @@ import mongoose,{Schema} from 'mongoose';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+
 dotenv.config({
   path:'./.env'
 })
@@ -33,19 +34,13 @@ const userSchema = new mongoose.Schema({
      type:String, //cloundnary
      required:true,
     },
-    phonenumber:{
-        type:Number,
-        required:true
-    },
+
     password:{
      type:String,
      required:[true,"password is required"],
      minlength:8,
     },
-    verfied:{
-     type:Boolean,
-     required:true
-    },   
+
     refreshToken:{
      type:String,
    },   

@@ -1,8 +1,7 @@
 
 
 const emailOtpTemplate = (otp) => {
-  
-  
+
     return `
       <!DOCTYPE html>
       <html lang="en">
@@ -64,7 +63,7 @@ const emailOtpTemplate = (otp) => {
             <p>Please use this code to complete your verification. The code is valid for 5 minutes.</p>
             <p>Do not share this code with anyone.</p>
             <div class="footer">
-              <p>Need help? Contact us at <a href="mailto:support@allcodehub.com">support@allcodehub.com</a></p>
+              <p>Need help? Contact us at <a href="mailto:aaryanmeena96@gmial.com">aaryanmeena96@gmail.com</a></p>
               <p>&copy; ${new Date().getFullYear()} AllCodeHub. All rights reserved.</p>
             </div>
           </div>

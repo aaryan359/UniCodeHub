@@ -1,5 +1,5 @@
 import { User } from "../models/User.model.js";
-import nodemailer from 'nodemailer';
+
 
 import uploadImage from "../utils/uploadimage.js";
 
@@ -13,13 +13,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  service: 'Gmail', // Replace with your email service provider
-  auth: {
-    user: process.env.EMAIL_USER, // Your email address
-    pass: process.env.EMAIL_PASS, // Your email password or app-specific password
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'Gmail', // Replace with your email service provider
+//   auth: {
+//     user: process.env.EMAIL_USER, // Your email address
+//     pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+//   },
+// });
 
 
 // function for genrating jwt refread=h and acces token
@@ -45,91 +45,97 @@ const generateAccessAndRefreshTokens = async (userId) => {
   }
 };
 
-// api checked
+//checked 
 const registerUser = async (req, res) => {
   try {
 
-    const { fullname, email, phonenumber, username, password, otp } = req.body;
+    let { fullname, email, username, password, otp } = req.body;
+
+
+
+
+    // Ensure fullname is a string
+    if (Array.isArray(fullname)) {
+      fullname = fullname.join(" ");
+    }
+
+
 
     // Validate required fields
-    if ([fullname, email, username, password, phonenumber, otp].some(field => !field || field.trim() === "")) {
+    if ([fullname, email, username, password, otp].some(field => !field )) {
       return res.status(400).json({
         success: false,
         message: "All fields are required and cannot be empty.",
       });
     }
 
-
-
     // Check if the user already exists
-    const existedUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existedUser = await User.findOne({ email });
+
     if (existedUser) {
       return res.status(400).json({
         success: false,
         message: "User already exists.",
       });
     }
-    
 
-     const profileimage = req.files.ProfileImage;
-     const result = await uploadImage(profileimage, "blogpost")
-     console.log(" profile image");
-  
+    // Handle profile image upload
+    let profileImageUrl = "";
+    if (req.files && req.files.ProfileImage) {
+      const profileimage = req.files.ProfileImage;
+      const result = await uploadImage(profileimage, "blogpost");
+      profileImageUrl = result.secure_url;
 
-
-
-    //find most recent otp   send on the provided email
-
-    const recentotp = await Otp.findOne({ email: email }).sort({ createdat: -1 }).limit(1);
-
-    console.log("recent otp is : ", recentotp)
-
-    if (recentotp == 0) {
-
-      //otp not found
+    } else {
       return res.status(400).json({
         success: false,
-        message: "zero-length"
-      })
-    } else if (otp !== recentotp.otp) {
-
-      return res.status(409).json({
-        success: false,
-        message: "invalid-otp"
-      })
+        message: "Profile image is required.",
+      });
     }
 
+    // Find the most recent OTP sent to the provided email
+    const recentOtp = await Otp.findOne({ email: email }).sort({ createdAt: -1 });
 
-    const createduser = await User.create({
+    if (!recentOtp) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP not found.",
+      });
+    } else if (otp !== recentOtp.otp) {
+      return res.status(409).json({
+        success: false,
+        message: "Invalid OTP.",
+      });
+    }
+
+    // Create the user
+    const createdUser = await User.create({
       fullname,
       email,
       password,
-      phonenumber,
       username,
-      verfied:true,
-      ProfileImage: result.secure_url
-    })
+      ProfileImage: profileImageUrl
+    });
 
     res.status(200).json({
       success: true,
-      message: "user-created succesfully",
-      createduser
+      message: "User created successfully",
+      user: createdUser
     });
-
-  }
-
-  catch {
-    () => {
-      res.status(400).json({
-        succes: false,
-        message: "error in register user"
-      })
-    }
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Error in registering user",
+      error: error.message
+    });
   }
 };
 
 
+
+//checked
 const sendotp = async (req, res) => {
+  console.log("send otp me aagya");
   try {
     // Fetch email from request body
     const { email } = req.body;
@@ -180,21 +186,21 @@ const sendotp = async (req, res) => {
     // Create entry in DB
     const otpBody = await Otp.create({ email, otp });
 
-    // Send OTP via email
-    const mailOptions = {
-      from: process.env.EMAIL_USER, // Sender's email address
-      to: email, // Recipient's email address
-      subject: 'Your OTP Code', // Subject line
-      text: `Your verification code is: ${otp}`, // Plain text body
-    };
+    // // Send OTP via email
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER, // Sender's email address
+    //   to: email, // Recipient's email address
+    //   subject: 'Your OTP Code', // Subject line
+    //   text: `Your verification code is: ${otp}`, // Plain text body
+    // };
 
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
 
     res.status(200).json({
       success: true,
       message: "OTP sent successfully.",
-      otpBody
+       otpBody
     });
 
   } catch (error) {
@@ -274,7 +280,7 @@ const login = async (req, res) => {
         message: "All fields are required and cannot be empty.",
       });
     }
-
+    
     console.log("Email and password received:", email, password);
 
     // Checking if the user exists
