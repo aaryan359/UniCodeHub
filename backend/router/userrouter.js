@@ -22,9 +22,6 @@ console.log("Router file loaded"); // Updated console log
 
 
 
-
-
-
 router.route('/registeruser').post(registerUser);
 
 router.route('/sendotp').post(sendotp);
@@ -37,7 +34,7 @@ router.route('/login').post(login);
 
 //secure routing
 router.route('/codeuploads').post(verifyJWT,codeUpload)
-router.get('/getcodeuploads', getAllCodeUploads);
+router.get('/getcodeuploads',verifyJWT, getAllCodeUploads);
 router.post('/codeupload/comment', addComment);
 router.get('/codeupload/:codeUploadId/comments', getComments);
 

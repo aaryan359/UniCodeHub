@@ -11,6 +11,7 @@ dotenv.config({
   path:'./.env'
 })
 
+
 const otpSchema = new mongoose.Schema({
     email:{
       type:String,
@@ -33,19 +34,25 @@ const otpSchema = new mongoose.Schema({
 
     async function sendverificationemail(email,otp){
     try{
-         await   mailsender(email,"Verification code for AllCodeHub", mailtempalte(otp));
+         await mailsender(email,"Verification code for AllCodeHub", mailtempalte(otp));
     
     } catch(error){   
        console.log( "error occur while sending email" ,error.message);
        throw error;
     }
- }
+    }
 
- otpSchema.pre('save', async function(next){
-        await sendverificationemail(this.email,this.otp);
-        next();
+    otpSchema.pre('save', async function(next){
+
+        
+       await sendverificationemail(this.email,this.otp);
+
+        
+       next();
+
 });
 
 
 
 export const Otp = mongoose.model('Otp',otpSchema);
+
