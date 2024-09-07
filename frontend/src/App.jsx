@@ -10,6 +10,7 @@ import Contribute from './components/pages/Contribute.jsx'
 import Blogs from './components/pages/Blogs.jsx'
 import Signup from './components/homepage/Signup.jsx'
 import Login from './components/homepage/Login.jsx'
+import Verifyemail from './components/homepage/Verifyemail.jsx'
 
 
 import MonacoEditor from './components/Temp.jsx'
@@ -33,6 +34,7 @@ function App() {
                                      <Route  path='/blogs' element = {<Blogs/>}  />
                                      <Route  path =  "/signup"  element = {<Signup/>} />
                                      <Route  path='/login' element = {<Login/>}  />
+                                     <Route  path='/verifyemail' element = {<Verifyemail/>}  />
 
                      </Routes>
            

@@ -106,7 +106,7 @@ export default function Header() {
                     </Link>
 
                      <Link to = "/signup">
-                                               <button className=" text-white rounded-2xl border-richblack-300 bg-richblack-800 pt-2 pb-2 px-[12px] py-[8px]" >
+                                               <button className="   text-white rounded-2xl border-richblack-300 bg-richblack-800 pt-2 pb-2 px-[12px] py-[8px]" >
                                                       Sign up
                                                  </button>
                       </Link>
