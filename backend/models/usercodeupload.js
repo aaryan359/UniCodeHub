@@ -5,8 +5,9 @@ const commentSchema = new mongoose.Schema({
   user: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    // required: true 
+    required: true 
   },
+  
   content: {
     type: String,
     required: true
@@ -38,7 +39,7 @@ const codeUploadSchema = new mongoose.Schema({
   author: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', 
-    // required: true 
+    required: true 
   },
   previewUrl: {
     type: String
@@ -51,7 +52,7 @@ const codeUploadSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User' 
   }],
-  comments: [commentSchema] // Embed the comment schema
+  comments: [commentSchema] 
 });
 
 // Export the model

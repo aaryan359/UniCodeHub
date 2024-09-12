@@ -13,6 +13,8 @@ import Login from './components/homepage/Login.jsx'
 import Verifyemail from './components/homepage/Verifyemail.jsx'
 
 
+import CodeEditor from './components/Components Page/codeEditor.jsx'
+
 import MonacoEditor from './components/Temp.jsx'
 
 
@@ -35,6 +37,7 @@ function App() {
                                      <Route  path =  "/signup"  element = {<Signup/>} />
                                      <Route  path='/login' element = {<Login/>}  />
                                      <Route  path='/verifyemail' element = {<Verifyemail/>}  />
+                                     <Route  path='/editor' element = {<CodeEditor/>}  />
 
                      </Routes>
            

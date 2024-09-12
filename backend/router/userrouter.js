@@ -15,6 +15,7 @@ import { getComments } from "../controllers/CodeUploadcontroller.js";
 
 // import { verifyOtp } from "../controllers/Usercontroller.js";
 import { sendotp } from "../controllers/Usercontroller.js";
+import { editor } from "../controllers/editor.js";
 
 const router = Router();
 console.log("Router file loaded"); // Updated console log
@@ -35,9 +36,9 @@ router.route('/login').post(login);
 //secure routing
 router.route('/codeuploads').post(verifyJWT,codeUpload)
 router.get('/getcodeuploads',verifyJWT, getAllCodeUploads);
-router.post('/codeupload/comment', addComment);
+router.post('/codeupload/comment',verifyJWT, addComment);
 router.get('/codeupload/:codeUploadId/comments', getComments);
-
+router.post('/editor' , editor)
 
 // Secured routes
 // Uncomment these routes if needed
